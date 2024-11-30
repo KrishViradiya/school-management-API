@@ -1,36 +1,47 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const sequelize = require('./config/dbConfig');
-const apiroutes = require('./routes');
-
+const routes = require('./routes');
 
 dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', apiroutes);
-app.use('/', (req, res) => {
-    res.send('Hello World')
-})
+// Health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
 
-const PORT = process.env.PORT || 3000;
+// Routes
+app.use('/api', routes);
 
-async function startServer() {
-  try {
-    await sequelize.authenticate();
-    console.log('Database connection has been established successfully.');
-    
-    await sequelize.sync({ alter: true });
-    
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something broke!' });
+});
+
+// Handle serverless environment
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 }
 
-startServer();
+// Database connection
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connected successfully');
+    return sequelize.sync({ alter: true });
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+// Export for serverless
+module.exports = app;
