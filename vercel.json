@@ -10,13 +10,15 @@
     {
       "src": "/api/(.*)",
       "dest": "src/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "src/api/index.js"
     }
   ],
   "env": {
     "NODE_ENV": "production"
+  },
+  "functions": {
+    "src/api/index.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
   }
 }
