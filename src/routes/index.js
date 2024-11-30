@@ -1,24 +1,11 @@
-// const express = require("express");
-// const v1Routes = require("./v1/index");
+const express = require('express');
+const router = express.Router();
+const v1Routes = require('./v1');
 
-// const router = express.Router();
+// Mount v1 routes
+router.use('/v1', v1Routes);
 
-// router.use("/v1", v1Routes);
-
-// module.exports = router;
-
-const router = require('express').Router();
-
-// Example route
-router.get('/test', async (req, res) => {
-  try {
-    // req.db is now available from the middleware
-    const result = await req.db.query('SELECT 1+1 as result');
-    res.json({ success: true, data: result });
-  } catch (error) {
-    console.error('Route error:', error);
-    res.status(500).json({ error: 'Route execution failed' });
-  }
-});
+// For backward compatibility (if needed)
+router.use('/', v1Routes);  // This will allow both /api/listSchools and /api/v1/listSchools
 
 module.exports = router;

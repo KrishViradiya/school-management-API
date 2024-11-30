@@ -1,5 +1,5 @@
-const schoolRepository = require('../repository/schoolRepository');
-const { calculateDistance } = require('../utils/distanceCalculator');
+const schoolRepository = require('../repository/schoolRepository.js');
+const { calculateDistance } = require('../utils/distanceCalculator.js');
 
 class SchoolService {
     async addSchool(schoolData) {

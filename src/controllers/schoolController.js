@@ -1,5 +1,5 @@
-const schoolService = require('../services/schoolService');
-const { testConnection } = require('../config/dbConfig');
+const schoolService = require('../services/schoolService.js');
+const { testConnection } = require('../config/dbConfig.js');
 class SchoolController {
   async addSchool(req, res) {
     try {
