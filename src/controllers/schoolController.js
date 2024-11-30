@@ -1,8 +1,12 @@
 const schoolService = require('../services/schoolService');
-
+const { testConnection } = require('../config/dbConfig');
 class SchoolController {
   async addSchool(req, res) {
     try {
+      const isConnected = await testConnection();
+      if (!isConnected) {
+        return res.status(500).json({ error: "Database connection failed" });
+      }
       const schoolData = req.body;
       const school = await schoolService.addSchool(schoolData);
       res.status(201).json(school);
