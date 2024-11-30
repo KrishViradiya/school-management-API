@@ -12,6 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', apiroutes);
+app.use('/', (req, res) => {
+    res.send('Hello World')
+})
 
 const PORT = process.env.PORT || 3000;
 
